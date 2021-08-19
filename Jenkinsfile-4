@@ -1,0 +1,28 @@
+pipeline {
+  agent { label 'master' }
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+  environment {
+    DOCKER_HUB_CREDS = credentials('kr1ps-docker-hub')
+
+  }
+  stages {
+    stage('Tooling versions') {
+      steps {
+        sh '''
+          docker --version
+          docker-compose version
+        '''
+      }
+    }
+    stage('Deploy') {
+      steps {
+        sh 'docker-compose up -d'
+        sh 'docker-compose ps --format json'
+      }
+    }
+  }
+  
+  }
+
