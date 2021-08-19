@@ -1,21 +1,29 @@
-FROM adoptopenjdk/openjdk11:alpine-slim as build
-WORKDIR /workspace/app
+FROM maven:3.5.4-jdk-8-alpine as maven
+COPY ./pom.xml ./pom.xml
+COPY ./src ./src
+RUN mvn dependency:go-offline -B
+RUN mvn package
 
-ARG PORT
-ENV PORT ${PORT}
+# For Java 8, try this
+FROM openjdk:8-jdk-alpine
 
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
-COPY src src
+# For Java 11, try this
 
-RUN ./mvnw install -DskipTests
-RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
+#FROM adoptopenjdk/openjdk11:alpine-jre
 
-FROM adoptopenjdk/openjdk11:alpine-slim
-VOLUME /tmp
-ARG DEPENDENCY=/workspace/app/target/dependency
-COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
-COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
-ENTRYPOINT ["java","-cp","app:app/lib/*","com.example.demo.DemoApplication"]
+# Refer to Maven build -> finalName
+#ARG JAR_FILE=target/spring-boot-web.jar
+
+# cd /opt/app
+WORKDIR /opt/app
+
+# cp target/spring-boot-web.jar /opt/app/app.jar
+COPY --from=maven target/*.jar /opt/app/app.jar
+
+
+# java -jar /opt/app/app.jar
+ENTRYPOINT ["java","-jar","app.jar","--server.port=8080"]
+
+## sudo docker run -p 8080:8080 -t docker-spring-boot:1.0
+## sudo docker run -p 80:8080 -t docker-spring-boot:1.0
+## sudo docker run -p 443:8443 -t docker-spring-boot:1.0

@@ -1,0 +1,8 @@
+com.sellics.searchvolume.score
+com.sellics.searchvolume.score.controllers
+com.sellics.searchvolume.score.domain
+com.sellics.searchvolume.score.enums
+com.sellics.searchvolume.score.exceptions
+com.sellics.searchvolume.score.properties
+com.sellics.searchvolume.score.seo.services
+com.sellics.searchvolume.score.services

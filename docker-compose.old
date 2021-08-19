@@ -1,0 +1,10 @@
+version: '3.1'
+
+services: 
+  scoreservice:
+    image: maventest
+    container_name: maventest-prod
+    restart: always
+    ports:
+      - 8080:8080
+    network_mode: bridge
