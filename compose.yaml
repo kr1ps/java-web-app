@@ -1,6 +1,6 @@
 services:
   web:
-    image: maventest
+    image: kr1ps/mairejava:lastest
     build:
       context: .
     ports:
