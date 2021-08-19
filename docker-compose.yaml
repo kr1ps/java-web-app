@@ -5,3 +5,7 @@ services:
       context: .
     ports:
       - "8084:8080"
+networks:
+  default:
+    external: true
+    name: jenkins
