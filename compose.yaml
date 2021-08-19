@@ -1,6 +1,6 @@
 services:
   web:
-    image: kr1ps/mairejava:lastest
+    image: kr1ps/mairejava
     build:
       context: .
     ports:
